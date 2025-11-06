@@ -1,26 +1,265 @@
+/* Tailwind v4 – tek satır import */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ========== Tema & reset ========== */
+:root{
+  --background:#ffffff;
+  --foreground:#171717;
+  --brand-yellow:#f5c400; /* vurucu ama yormayan sarı */
+  --brand-black:#0b0b0c;  /* derin siyah */
+}
+@media (prefers-color-scheme: dark){
+  :root{ --background:#0a0a0a; --foreground:#ededed; }
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html,body{ height:100%; width:100%; }
+body{
+  margin:0; /* header + swiper boşluğunu sıfırlar */
+  background:var(--background);
+  color:var(--foreground);
+  font-family:Arial, Helvetica, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ========== Marka yardımcıları (header/footer butonların sarısı için) ========== */
+.bg-brand-black{ background-color:var(--brand-black) !important; }
+.text-brand-yellow{ color:var(--brand-yellow) !important; }
+.bg-brand-yellow{ background-color:var(--brand-yellow) !important; }
+.border-brand-yellow{ border-color:var(--brand-yellow) !important; }
+
+/* Eğer .btn/.btn-primary kullandıysan sarıyı koru */
+.btn, .btn-primary{
+  background-color: var(--brand-yellow) !important;
+  border-color: var(--brand-yellow) !important;
+  color:#111 !important;
+}
+
+/* ========== Tailwind v4 custom utilities ========== */
+@utility nav-link{
+  @apply text-sm text-gray-200 transition-colors hover:text-white;
+}
+@utility footer-link{
+  @apply text-gray-300 hover:text-white transition-colors;
+}
+
+/* nav-link alt-çizgi animasyonu */
+.nav-link::after{
+  content:""; display:block; height:2px;
+  background:linear-gradient(90deg,var(--brand-yellow),#ffe27a,var(--brand-yellow));
+  transform:scaleX(0); transform-origin:left; transition:transform .35s ease;
+}
+.nav-link:hover::after{ transform:scaleX(1); }
+
+/* ========== Full-bleed yardımcı sınıfı ========== */
+.full-bleed{
+  width:100vw; position:relative; left:50%; right:50%;
+  margin-left:-50vw; margin-right:-50vw;
+}
+
+/* =========================================================
+   SWIPER — İç yüksekliği ve görsel davranışı
+   ========================================================= */
+.hero-swiper{ 
+  height:100dvh;   /* JS tarafındaki inline ile aynı */
+  margin:0 !important;
+}
+.hero-swiper .swiper,
+.hero-swiper .swiper-wrapper,
+.hero-swiper .swiper-slide{ height:100% !important; }
+
+/* Küçük ekran koruması */
+.hero-swiper .swiper{ width:100vw !important; min-width:320px; }
+
+/* ==== Slide içeriğinde mikro-scale hareket için temel ==== */
+.swiper-slide .slide-inner{
+  position: relative; width:100%; height:100%;
+  will-change: transform;
+}
+
+/* Aktif slayt değiştiğinde kısa bir kick animasyonu */
+.swiper-slide-active .slide-inner.kick{
+  animation: slideKick 600ms cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes slideKick{
+  0%   { transform: scale(1.000); }
+  25%  { transform: scale(1.022); }
+  100% { transform: scale(1.000); }
+}
+
+/* =========================================================
+   DIŞ PAGINATION — Minimal ince bar + ışık izi + pulse glow
+   ========================================================= */
+
+/* Swiper dışı container (Hero bileşeninin altında render ediyoruz) */
+.hero-controls{
+  position: relative;
+  display:flex; align-items:center; justify-content:center;
+  width:100%;
+  margin-top: 10px;   /* Swiper ile arası */
+  pointer-events: none;  /* tıklama pasif */
+}
+
+/* İnce ray + progress (çerçevesiz, minimal) */
+.hero-pagination{
+  width: min(520px, 86vw);
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.16);  /* çok ince ray */
+  overflow: visible;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+}
+
+/* Gelişen dolgu — genişlik JS ile ayarlanıyor (var(--p)) */
+.hero-pagination .progress{
+  --p: 0%;
+  position: absolute; left: 0; top: 0;
+  width: calc(var(--p));
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255,255,255,.35), #ffe27a 40%, var(--brand-yellow));
+  box-shadow: 0 0 14px rgba(245,196,0,.24), 0 0 2px rgba(255,255,255,.28) inset;
+  transition: width .18s linear, filter .18s ease, box-shadow .18s ease;
+  will-change: width;
+}
+
+/* Işık izi (uç “head” parıltısı) */
+.hero-pagination .progress::after{
+  content:"";
+  position: absolute; right: -10px; top: 50%;
+  width: 22px; height: 22px;
+  transform: translateY(-50%) scale(.55);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,.35) 40%, rgba(255,255,255,0) 62%);
+  filter: blur(.6px);
+  opacity: .85;
+  transition: opacity .18s linear, transform .18s linear;
+}
+
+/* Pulse glow — slayt değişiminde kısa parıltı */
+.hero-pagination .progress.is-pulse{
+  animation: pulseGlow 900ms ease-out 1;
+}
+@keyframes pulseGlow{
+  0%   { box-shadow: 0 0 22px rgba(245,196,0,.42), 0 0 2px rgba(255,255,255,.35) inset; filter: saturate(1.1); }
+  60%  { box-shadow: 0 0 16px rgba(245,196,0,.28), 0 0 2px rgba(255,255,255,.28) inset; filter: saturate(1.0); }
+  100% { box-shadow: 0 0 14px rgba(245,196,0,.24), 0 0 2px rgba(255,255,255,.28) inset; filter: saturate(.98); }
+}
+
+/* Hareket kısıtlı tercihte animasyonları sadeleştir */
+@media (prefers-reduced-motion: reduce){
+  .swiper-slide .slide-inner,
+  .hero-pagination .progress{ transition: none !important; animation: none !important; }
+}
+
+/* Kart hover'ını hareket azalt tercihlerinde sakinleştir (Server Component'te styled-jsx yerine global) */
+@media (prefers-reduced-motion: reduce){
+  .card-hover-smooth:hover{
+    transform: none !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ===== Floating Buttons ===== */
+.floating-wrap{
+  position: fixed;
+  right: clamp(12px, 2.4vw, 20px);
+  bottom: calc(env(safe-area-inset-bottom, 0) + clamp(12px, 2.4vw, 20px));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 60; /* header/overlay üstünde dursun */
 }
+
+.floating-btn{
+  width: 56px; height: 56px;
+  display: grid; place-items: center;
+  border-radius: 9999px;
+  text-decoration: none;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.35),
+    inset 0 1px 2px rgba(255,255,255,.25),
+    inset 0 -1px 2px rgba(0,0,0,.25);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  border: 1px solid rgba(255,255,255,.10);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.floating-btn:hover{
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 32px rgba(0,0,0,.45),
+    inset 0 1px 2px rgba(255,255,255,.30),
+    inset 0 -1px 2px rgba(0,0,0,.28);
+  filter: saturate(1.05);
+}
+
+.floating-btn:active{ transform: translateY(0); }
+
+.fb-icon{ width: 22px; height: 22px; }
+
+/* Renk temaları */
+.fb-whatsapp{
+  background: #25D366;      /* WhatsApp yeşili */
+  color: #fff;               /* beyaz ikon */
+}
+
+.fb-call{
+  background: var(--brand-yellow); /* sarı zemin */
+  color: #000;                     /* siyah ikon */
+}
+
+/* Küçük ekranda biraz küçült */
+@media (max-width: 420px){
+  .floating-btn{ width: 52px; height: 52px; }
+  .fb-icon{ width: 20px; height: 20px; }
+}
+
+
+/* ===== Sticky Bar ===== */
+:root { --sticky-h: 0px; } /* JS ile güncelleniyor */
+
+.sticky-bar{
+  position: sticky;
+  top: 0;              /* her sayfanın en üstüne yapış */
+  z-index: 1000;       /* header'ın üstünde */
+  width: 100%;
+  background: #000;
+  padding: 6px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.st-white{ color:#fff; display:block; font-size:13px; line-height:1.2; }
+.st-yellow{ color: var(--brand-yellow); display:block; font-size:14px; font-weight:600; line-height:1.2; }
+
+.sticky-link{ text-decoration:none; }
+.sticky-left, .sticky-right{ display:flex; flex-direction:row; gap:24px; }
+.sticky-item{ display:flex; align-items:center; gap:10px; }
+.sticky-ic{ width:18px; height:18px; color:#fff; opacity:.95; }
+.sticky-txt{ display:flex; flex-direction:column; }
+
+/* ===== Mobil hizalama: hepsi tam ortada ===== */
+@media (max-width: 768px){
+  .sticky-bar{
+    flex-direction: column;
+    text-align: center;
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .sticky-bar__left,
+  .sticky-bar__right{
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  .sticky-bar__link{ margin-right: 0; }
+  .sticky-bar__item{ justify-content: center; }              /* ikon + metin ortada */
+  .sticky-bar__text{ align-items: center; }                  /* metin bloğu ortada */
+  .white-text, .yellow-text{ text-align: center; width: 100%; } /* sarı satırlar ortada */
+}
+
+
+
