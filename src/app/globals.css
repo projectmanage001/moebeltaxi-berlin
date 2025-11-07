@@ -461,8 +461,9 @@ input, textarea, select, button {
   border-color: #26292c;
 }
 
-/* Sarı zeminli CTA’ların yazısı hep siyah kalsın */
-button, [role="button"],
-a.bg-brand-yellow, .bg-brand-yellow {
+/* Sadece sarı zeminli CTA’ların yazısı siyah olsun */
+.bg-brand-yellow,
+button.bg-brand-yellow,
+a.bg-brand-yellow {
   color: #0b0b0c !important; /* marka siyahın */
 }
