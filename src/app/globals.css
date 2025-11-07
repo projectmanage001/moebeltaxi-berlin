@@ -438,5 +438,25 @@ body{
   .white-text, .yellow-text{ text-align: center; width: 100%; } /* sarı satırlar ortada */
 }
 
+/* Tarayıcıya: bu site sadece dark şemasında render edilsin */
+:root {
+  color-scheme: only dark;
+}
 
+/* Temel renkleri sabitle */
+html, body {
+  background-color: #0b0b0c !important;  /* senin brand siyahın */
+  color: #e5e7eb !important;             /* Tailwind text-gray-200 civarı */
+}
 
+/* Metin renginin çocuklara düzgün akması için */
+*, *::before, *::after { 
+  color: inherit;
+}
+
+/* UA (tarayıcı) defaultları siyaha çevirmesin diye form kontrollerini de sabitle */
+input, textarea, select, button {
+  color: inherit;
+  background-color: #0f1113; /* çok koyu gri */
+  border-color: #26292c;
+}
