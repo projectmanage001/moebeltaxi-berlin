@@ -1,18 +1,13 @@
+// src/components/Footer.tsx
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <motion.footer
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25, margin: "-80px" }} // yaklaşıınca açılır
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="mt-20 border-t border-brand-yellow/20 bg-black/60 backdrop-blur-sm relative"
-    >
+    <footer className="mt-20 border-t border-brand-yellow/20 bg-black/60 backdrop-blur-sm relative">
       {/* ince üst parıltı çizgisi */}
       <div
         aria-hidden
@@ -20,8 +15,8 @@ export default function Footer() {
       />
 
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 md:grid-cols-4">
-        {/* Marka */}
-        <div className="space-y-4">
+        {/* Marka + Sosyal */}
+        <div className="space-y-5">
           <div className="inline-flex items-center gap-3">
             {/* DEV GİBİ BÜYÜK LOGO */}
             <Image
@@ -38,6 +33,30 @@ export default function Footer() {
             Zuverlässige Umzüge & Transporte in Berlin und deutschlandweit.
             Pünktlich, sorgfältig, versichert.
           </p>
+
+          {/* Sosyal medya ikonları (renkli) */}
+          <div className="flex items-center gap-3 pt-1">
+            <Link
+              href="https://www.facebook.com/people/M%C3%B6bel-Taxi-Umzug-Berlin/61581455103024/#"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="group grid h-9 w-9 place-items-center rounded-full bg-[#1877F2] text-white shadow hover:brightness-110 transition"
+              title="Facebook"
+            >
+              <FaFacebookF className="text-[16px]" />
+            </Link>
+            <Link
+              href="https://www.instagram.com/mobeltaxiumzug/?igsh=MWYwam9xM29ud3RldQ%3D%3D#"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="group grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white shadow hover:brightness-110 transition"
+              title="Instagram"
+            >
+              <FaInstagram className="text-[16px]" />
+            </Link>
+          </div>
         </div>
 
         {/* Navigation */}
@@ -62,15 +81,9 @@ export default function Footer() {
               <li key={i.href}>
                 <Link
                   href={i.href}
-                  className="footer-link relative inline-block text-gray-200/90 transition
-                             hover:text-brand-yellow"
+                  className="footer-link relative inline-block text-gray-200/90 transition hover:text-brand-yellow"
                 >
                   {i.label}
-                  <span
-                    aria-hidden
-                    className="block h-px w-0 bg-brand-yellow transition-all duration-300 ease-out
-                               group-hover:w-full"
-                  />
                 </Link>
               </li>
             ))}
@@ -145,8 +158,17 @@ export default function Footer() {
       <div className="border-t border-brand-yellow/10">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 px-4 py-6 text-xs text-gray-400 sm:flex-row">
           <p>
-            © {new Date().getFullYear()} Möbel Taxi Umzug Berlin – Alle Rechte
-            vorbehalten.
+            {/* YEAR sabit 2025 olarak istendi */}
+            © 2025 MöbelTaxi Umzug. Alle Rechte vorbehalten.{" "}
+            <span className="hidden sm:inline">|</span>{" "}
+            <Link
+              href="https://tr.linkedin.com/in/enes-g%C3%B6kyar-822433271"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative inline-block align-baseline font-semibold text-brand-yellow powered-by"
+            >
+              Powered by Enes
+            </Link>
           </p>
           <div className="flex items-center gap-4">
             <Link
@@ -164,6 +186,37 @@ export default function Footer() {
           </div>
         </div>
       </div>
-    </motion.footer>
+
+      {/* “Powered by Enes” altındaki sürekli akan ince şerit */}
+      <style jsx>{`
+        .powered-by {
+          padding-bottom: 2px; /* çizgiye biraz mesafe */
+        }
+        .powered-by::after {
+          content: "";
+          position: absolute;
+          left: -30%;
+          bottom: -2px;
+          height: 2px;
+          width: 30%;
+          background: linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0),
+            #f5c400,
+            rgba(0, 0, 0, 0)
+          );
+          filter: drop-shadow(0 0 6px rgba(245, 196, 0, 0.55));
+          animation: poweredRun 1.8s linear infinite;
+        }
+        @keyframes poweredRun {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(460%);
+          }
+        }
+      `}</style>
+    </footer>
   );
 }

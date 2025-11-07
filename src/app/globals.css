@@ -86,6 +86,183 @@ body{
 }
 
 /* =========================================================
+   SWIPER — Tam ekran, blur YOK
+   ========================================================= */
+.hero-swiper{
+  height: 100svh;            /* mobil şerit sorunlarında doğru yükseklik */
+  margin: 0 !important;
+}
+.hero-swiper .swiper,
+.hero-swiper .swiper-wrapper,
+.hero-swiper .swiper-slide{ height:100% !important; }
+.hero-swiper .swiper{ width:100vw !important; min-width:320px; }
+
+/* Tek görsel: tam kapla */
+.slide-img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+
+/* Kick animasyonu (mikro-scale) */
+.swiper-slide .slide-inner{
+  position: relative; width:100%; height:100%;
+  will-change: transform;
+}
+.swiper-slide-active .slide-inner.kick{
+  animation: slideKick 600ms cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes slideKick{
+  0%   { transform: scale(1.000); }
+  25%  { transform: scale(1.022); }
+  100% { transform: scale(1.000); }
+}
+
+/* (İsteğe bağlı) çok hafif vignette
+.hero-vignette{
+  pointer-events:none;
+  position:absolute;
+  inset:0;
+  background: radial-gradient(ellipse at center, transparent 70%, rgba(0,0,0,0.10) 100%);
+}
+*/
+
+/* Progress bar (dış pagination) — varsa önceki stiller korunur */
+.hero-controls{
+  position:relative;
+  width:100%;
+}
+.hero-pagination{
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(90vw, 680px);
+  height:3px;
+  background:rgba(255,255,255,.22);
+  border-radius:999px;
+  overflow:hidden;
+}
+.hero-pagination .progress{
+  --p: 0%;
+  width:var(--p);
+  height:100%;
+  background:#f5c400;
+  transition: width .2s linear;
+}
+.hero-pagination .progress.is-pulse{
+  filter: drop-shadow(0 0 10px rgba(245,196,0,.55));
+}
+
+/* =========================================================
+   SWIPER — Masaüstü: cover | Mobil: contain (full image)
+   ========================================================= */
+.hero-swiper{
+  height: 100svh;
+  margin: 0 !important;
+}
+.hero-swiper .swiper,
+.hero-swiper .swiper-wrapper,
+.hero-swiper .swiper-slide{ height:100% !important; }
+.hero-swiper .swiper{ width:100vw !important; min-width:320px; }
+
+/* Ortak img kuralı (masaüstü için cover) */
+.slide-img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;        /* desktop */
+  object-position:center;
+  background:#000;         /* boşluk görünmesin */
+  display:block;
+}
+
+/* Mobilde: contain + aspect-ratio kutusu, blur yok, tüm görsel görünür */
+@media (max-width: 767.98px){
+  .hero-swiper{
+    height:auto !important;             /* tam ekran zorunluluğunu kaldır */
+  }
+  .hero-swiper .swiper,
+  .hero-swiper .swiper-wrapper,
+  .hero-swiper .swiper-slide{
+    height:auto !important;
+  }
+  .swiper-slide .slide-inner{
+    position:relative;
+    width:100%;
+    /* İçeride boş bir blokla ratio kutusu oluşturuyoruz */
+  }
+  .swiper-slide .slide-inner::before{
+    content:"";
+    display:block;
+    /* Dinamik oran; JS ile --hero-ratio set ediliyor, yoksa 16/9 */
+    aspect-ratio: var(--hero-ratio, 1.7778);
+    width:100%;
+  }
+  .slide-img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:contain;     /* mobilde TAMAMINI göster */
+    object-position:center;
+    background:#000;        /* bandlar siyah (blur yok) */
+  }
+}
+
+/* Kick animasyonu (mikro-scale) */
+.swiper-slide .slide-inner{
+  will-change: transform;
+}
+.swiper-slide-active .slide-inner.kick{
+  animation: slideKick 600ms cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes slideKick{
+  0%   { transform: scale(1.000); }
+  25%  { transform: scale(1.022); }
+  100% { transform: scale(1.000); }
+}
+
+/* Progress bar (dış pagination) — ORTALAMA FIX */
+.hero-controls{
+  position: absolute;      /* fullBleed kapsayıcısına göre */
+  left: 0;
+  right: 0;
+  bottom: 10px;            /* barın dipten mesafesi */
+  display: flex;
+  justify-content: center; /* yatayda tam ortala */
+  pointer-events: none;    /* yalnızca bar tıklanabilir olsun */
+  z-index: 2;
+}
+
+.hero-pagination{
+  width: min(92vw, 680px);
+  height: 3px;
+  background: rgba(255,255,255,.22);
+  border-radius: 999px;
+  overflow: hidden;
+  pointer-events: auto;     /* bar tıklanabilir */
+}
+
+/* bar dolumu */
+.hero-pagination .progress{
+  --p: 0%;
+  width: var(--p);
+  height: 100%;
+  background: #f5c400;
+  transition: width .2s linear;
+}
+.hero-pagination .progress.is-pulse{
+  filter: drop-shadow(0 0 10px rgba(245,196,0,.55));
+}
+
+
+
+
+/* =========================================================
    DIŞ PAGINATION — Minimal ince bar + ışık izi + pulse glow
    ========================================================= */
 

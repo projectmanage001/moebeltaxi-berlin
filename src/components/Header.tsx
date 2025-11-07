@@ -11,7 +11,7 @@ const nav = [
   { href: "/kontakt", label: "Kontakt" },
 ];
 
-const COMPANY_NAME = "MöbelTaxi Umzug & Berlin";
+const COMPANY_NAME = "MöbelTaxi & Umzug Berlin";
 const LOGO_SRC = "/brand/logo.png"; // /public/brand/logo.png
 
 export default function Header() {

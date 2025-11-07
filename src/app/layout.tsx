@@ -1,10 +1,13 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
 import StickyBar from "@/components/StickyBar";
-import FooterContactGate from "@/components/FooterContactGate"; // ⬅️ değişti
+import FooterContactGate from "@/components/FooterContactGate";
+import CookieConsent from "@/components/CookieConsent";          // ✅ cookie banner
+// import AnalyticsLoader from "@/components/AnalyticsLoader";    // (opsiyonel) analytics izne göre
 
 const SITE_NAME = "Möbel Taxi Umzug Berlin";
 const SITE_URL = "https://moebeltaxiumzug.com";
@@ -49,7 +52,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Sayfa içerikleri */}
         {children}
 
-        {/* Footer’dan hemen önce: /kontakt dışındaki tüm sayfalarda göster */}
+        {/* Site genelinde cookie bildirimi (fixed-bottom) */}
+        <CookieConsent />
+
+        {/* (Opsiyonel) Analytics izinli ise scriptleri yükle
+            <AnalyticsLoader /> */}
+
+        {/* Footer’dan hemen önce: /kontakt dışındaki tüm sayfalarda gösterilir */}
         <FooterContactGate />
 
         {/* Global footer */}
